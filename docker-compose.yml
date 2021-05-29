@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  postdb:
+    image: postgres:latest
+    restart: always
+    shm_size: 10240M
+    ulimits:
+      nproc: 10240
+      nofile:
+        soft: 10240
+        hard: 10240
+    environment:
+      - PGDATA=/var/lib/psql/data
+      - POSTGRES_DB=prod
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=${SA_PWD:-c8hd.m2i}
+    volumes:
+      - pgdata:/var/lib/psql/data
+      - ./data:/etc/data
+      - ./sql:/etc/sql
+      - ./etc/postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+    networks:
+      - restnet
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@local.net
+      - PGADMIN_DEFAULT_PASSWORD=${PG_ADMIN_PWD:-c8hd.m2i}
+      - PGADMIN_CONFIG_CONNECT_TIMEOUT=0
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - 80:80
+    networks:
+      - restnet
+
+networks:
+  restnet:
+
+volumes:
+  pgdata:
+  pgadmin:
