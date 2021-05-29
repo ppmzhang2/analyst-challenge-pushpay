@@ -19,6 +19,8 @@ services:
       - ./data:/etc/data
       - ./sql:/etc/sql
       - ./etc/postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+    ports:
+      - 5432:5432
     networks:
       - restnet
 
